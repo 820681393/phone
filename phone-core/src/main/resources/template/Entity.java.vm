@@ -1,0 +1,49 @@
+package ${package.Entity};
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.mybaits.jpa.annotation.DaoClass;
+import ${package.Mapper}.${table.mapperName};
+    #if(${entityLombokModel})
+    import lombok.Data;
+    #end
+    #foreach($pkg in ${table.importPackages})
+    import ${pkg};
+    #end
+
+import java.io.Serializable;
+/**
+ * <p>
+ * ${table.comment}
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@TableName(value = "${table.name}")
+@DaoClass(daoClass = ${table.mapperName}.class)
+@ApiModel(value = "${table.comment}")
+@Data
+#if(${superEntityClass})
+public class ${entity} extends ${superEntityClass} implements Serializable{
+#else
+public class ${entity} implements Serializable{
+#end
+
+
+## ----------  BEGIN 字段循环遍历  ----------
+#foreach($field in ${table.fields})
+    #if(${field.keyFlag})
+        #if(${field.keyIdentityFlag})
+    @TableId(value = "${field.name}")
+        #else
+    @TableId("${field.name}")
+        #end
+    #end
+    @ApiModelProperty(value = "${field.comment}")
+    private ${field.propertyType} ${field.propertyName};
+
+#end
+## ----------  END 字段循环遍历  ----------
+}

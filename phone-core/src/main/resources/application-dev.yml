@@ -1,0 +1,130 @@
+server:
+  servlet:
+    context-path: /mobile
+  port: 8880
+spring:
+  application:
+    name: dev
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  #输出时间格式化
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  #ftl模板配置
+  redis:
+    host: 192.168.110.92
+    port: 6379
+    password: root
+    jedis:
+      pool:
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-active: 200
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1
+        # 连接池中的最大空闲连接
+        max-idle: 10
+        # 连接池中的最小空闲连接
+        min-idle: 0
+    lettuce:
+      shutdown-timeout: 30000
+    database: 2
+
+  #数据源
+  security:
+    basic:
+      enabled: false
+  datasource:
+    url: jdbc:mysql://47.242.11.16:3306/phone?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useSSL=false&rewriteBatchedStatements=true&serverTimezone=GMT&allowPublicKeyRetrieval=true
+    username: phone
+    password: 8z3k5bZzyabrxfc7
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      # 初始化时建立物理连接的个数。初始化发生在显示调用init方法，或者第一次getConnection时
+      initialSize: 1
+      # 最小连接池数量
+      minIdle: 1
+      # 最大连接池数量
+      maxActive: 10
+      # 配置获取连接等待超时的时间
+      maxWait: 30000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 验证连接有效与否的SQL，不同的数据配置不同
+      validationQuery: select 1
+      # 建议配置为true，不影响性能，并且保证安全性。
+      # 申请连接的时候检测，如果空闲时间大于
+      # timeBetweenEvictionRunsMillis，
+      # 执行validationQuery检测连接是否有效。
+      testWhileIdle: true
+      # 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+      # 这里建议配置为TRUE，防止取到的连接不可用
+      testOnBorrow: true
+      # 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
+      testOnReturn: false
+      # 是否缓存preparedStatement，也就是PSCache。
+      # PSCache对支持游标的数据库性能提升巨大，比如说oracle。
+      # 在mysql5.5以下的版本中没有PSCache功能，建议关闭掉。
+      # 作者在5.5版本中使用PSCache，通过监控界面发现PSCache有缓存命中率记录，
+      # 该应该是支持PSCache。
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      # 属性类型是字符串，通过别名的方式配置扩展插件，
+      # 常用的插件有：
+      # 监控统计用的filter:stat
+      # 日志用的filter:log4j
+      # 防御sql注入的filter:wall
+      filters: stat
+    hikari:
+      connection-timeout: 60000
+  devtools:
+    restart:
+      enabled: true #设置开启热部署
+      additional-exclude: src/main/java #重启目录
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+logging:
+  level:
+    io.swagger.models.parameters.AbstractSerializableParameter: error
+
+
+mybatis-plus:
+  #  mapper扫描
+  mapper-locations: classpath:/mapper/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.core.model
+  global-config:
+    #刷新mapper 调试神器
+    db-config:
+      #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+      id-type: auto
+      #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+      field-strategy: 2
+      #驼峰下划线转换
+      column-underline: true
+      #逻辑删除配置
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+    refresh: true
+  configuration:
+    #配置返回数据库(column下划线命名&&返回java实体是驼峰命名)，自动匹配无需as（没开启这个，SQL需要写as： select user_id as userId）
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    database-id: mysql
+  scripting-language-driver:
+    freemarker:
+      template-file:
+        path-provider:
+          separate-directory-per-mapper:
+    thymeleaf:
+      template-file:
+        path-provider:
+          separate-directory-per-mapper:
