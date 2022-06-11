@@ -1,6 +1,7 @@
 package com.mobile.controller;
 
 import com.core.utils.ExcelUtils;
+import com.core.utils.OcrTableImageUtils;
 import com.core.utils.ResponseResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,15 +16,21 @@ import java.text.ParseException;
 import java.util.List;
 
 @RestController
-@Api(value = "api接口", tags = "表格解析接口")
+@Api(value = "api接口", tags = "解析接口")
 public class MobileSheetController {
 
 
     @PostMapping(value = "/sheet/parsing")
     @ResponseBody
     @ApiOperation(value = "表格解析", notes = "请求携带token,file参数文件上传")
-    public ResponseResult<List<List<String>>> upload(HttpServletRequest request, @RequestParam("file") MultipartFile file) throws ParseException {
+    public ResponseResult<List<List<String>>> parsing(HttpServletRequest request, @RequestParam("file") MultipartFile file) throws ParseException {
         return ResponseResult.successResult(ExcelUtils.analysis(file));
+    }
+    @PostMapping(value = "/image/identify")
+    @ResponseBody
+    @ApiOperation(value = "图片识别", notes = "请求携带token,file参数文件上传")
+    public ResponseResult identify(HttpServletRequest request, @RequestParam("file") MultipartFile file) throws Exception {
+        return ResponseResult.successResult(OcrTableImageUtils.ocrTableImageIdentify(file.getInputStream()));
     }
 
 }
